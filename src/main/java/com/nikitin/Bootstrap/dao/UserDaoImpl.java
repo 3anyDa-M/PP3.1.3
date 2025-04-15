@@ -26,12 +26,13 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void saveUser(String username, String password , Set<Role> roles) {
-        em.persist(new User(username, password, roles));
+    public void saveUser(String firstName, String lastName, int age, String email, String password, Set<Role> roles) {
+        em.persist(new User( firstName, lastName, age, email, password, roles));
     }
 
+
     @Override
-    public void deleteUserById(int id) {
+    public void deleteUserById(Long id) {
         User user = em.find(User.class, id);
         if (user != null) {
             em.remove(user);

@@ -4,6 +4,7 @@ package com.nikitin.Bootstrap.service;
 import com.nikitin.Bootstrap.dao.UserDao;
 import com.nikitin.Bootstrap.models.Role;
 import com.nikitin.Bootstrap.models.User;
+import com.nikitin.Bootstrap.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,10 +22,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private final UserDao userDao;
+    private final UserRepository userRepository;
 
-    public UserServiceImpl(PasswordEncoder passwordEncoder, UserDao userDao) {
+    public UserServiceImpl(PasswordEncoder passwordEncoder, UserDao userDao, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userDao = userDao;
+        this.userRepository = userRepository;
     }
 
 
@@ -41,18 +44,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void save(String name, String password, Set<Role> roles) {
+    public void save(String firstName, String lastName, int age, String email, String password, Set<Role> roles) {
         try {
             String encodedPassword = passwordEncoder.encode(password);
-            userDao.saveUser(name, encodedPassword, roles);
+            userDao.saveUser(firstName, lastName, age, email, encodedPassword, roles);
         } catch (Exception ex) {
             LOGGER.error("Ошибка при сохранении пользователя : {}", ex.getMessage(), ex);
             throw new RuntimeException("Не удалось сохранить пользователя , произведён откат  ", ex);
         }
     }
-
-
-
 
 
     @Override
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void delete(int id) {
+    public void delete(Long id) {
         try {
             userDao.deleteUserById(id);
         } catch (Exception ex) {
@@ -89,10 +89,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        try{
+        try {
             return userDao.findUserById(id);
-        }catch(Exception ex){
-            LOGGER.error("Ошибка при поиске  пользователя : {}", ex.getMessage(), ex);
+        } catch (Exception ex) {
+            LOGGER.error("Ошибка при поиске  пользователя по Id : {}", ex.getMessage(), ex);
+            throw new RuntimeException("Не удалось найти пользователя, произведён откат", ex);
+        }
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        try {
+    return userRepository.findByEmail(email);
+
+        } catch (Exception ex) {
+            LOGGER.error("Ошибка при поиске  пользователя по Email: {}", ex.getMessage(), ex);
             throw new RuntimeException("Не удалось найти пользователя, произведён откат", ex);
         }
     }

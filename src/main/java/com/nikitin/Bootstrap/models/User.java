@@ -2,20 +2,33 @@ package com.nikitin.Bootstrap.models;
 
 
 import jakarta.persistence.*;
+import org.springframework.security.core.userdetails.UserDetails;
+
 
 import java.util.Set;
 
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User   {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-@Column
-    private String username;
-@Column
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastname;
+
+    @Column(name = "age")
+    private int age;
+
+    @Column(name = "email",unique = true)
+    private String email;
+
+    @Column(name = "password")
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -24,13 +37,16 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
-private Set <Role> roles;
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(String username, String password, Set<Role> roles) {
-        this.username = username;
+    public User(String firstName, String lastname, int age, String email, String password, Set<Role> roles) {
+        this.firstName = firstName;
+        this.lastname = lastname;
+        this.age = age;
+        this.email = email;
         this.password = password;
         this.roles = roles;
     }
@@ -43,12 +59,36 @@ private Set <Role> roles;
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -71,7 +111,10 @@ private Set <Role> roles;
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastname='" + lastname + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", roles=" + roles +
                 '}';

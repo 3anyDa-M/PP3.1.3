@@ -11,13 +11,14 @@ public interface UserService {
 
     List<User> findAllUsers();
 
-    void save(String name , String lastName, Set<Role> roles);
+     void save(String firstName, String lastName,int age,String email, String password, Set<Role> roles);
 
     void update(User user);
 
-    void delete(int id);
+    void delete(Long id);
 
     User findById(Long id);
 
+     User findByEmail(String email);
 
 }

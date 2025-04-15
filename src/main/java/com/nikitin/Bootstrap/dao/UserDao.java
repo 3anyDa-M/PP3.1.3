@@ -12,9 +12,9 @@ public interface UserDao {
     List<User> getAllUsers();
 
 
-    void saveUser(String name, String lastName,Set<Role> roles);
+    void saveUser(String firstName, String lastName, int age,String email,  String password, Set<Role> roles);
 
-    void deleteUserById(int id);
+    void deleteUserById(Long id);
 
     void updateUser(User user);
 
