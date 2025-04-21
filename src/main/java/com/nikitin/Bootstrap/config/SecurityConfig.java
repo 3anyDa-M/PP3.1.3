@@ -27,7 +27,8 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/admin/**"))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
@@ -38,7 +39,7 @@ public class SecurityConfig {
                         .loginProcessingUrl("/login")
                         .usernameParameter("email")
                         .passwordParameter("password")
-                        .successHandler(customAuthenticationSuccessHandler)  // Указываем обработчик
+                        .successHandler(customAuthenticationSuccessHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout
